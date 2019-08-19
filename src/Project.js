@@ -10,7 +10,17 @@ class Project extends Component
     super(props);
     //console.log(props);
   }
-
+  handleDeleteProjectClick = () =>
+  {
+     var {deleteProject,id} = this.props;
+     deleteProject(id);
+  }
+  handleUpdateProjectClick = () =>
+  {
+      var {setActiveView,setProjectToUpdate,id} = this.props;
+      setProjectToUpdate(id);
+      setActiveView('edit-project');
+  }
   render()
   {
    
@@ -22,8 +32,8 @@ class Project extends Component
                 <p className="card-text">{/*this.props.description*/description}</p>
                 <p>
                     <i className="fas fa-heart"></i>
-                    <i className="fas fa-edit"></i>
-                    <i className="fas fa-trash" ></i>
+                    <i className="fas fa-edit" onClick={this.handleUpdateProjectClick}></i>
+                    <i className="fas fa-trash" onClick={this.handleDeleteProjectClick}></i>
                 </p>
             
                 </div>

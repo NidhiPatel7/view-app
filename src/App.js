@@ -3,6 +3,7 @@ import Axios from'axios';
 import View from'./View';
 import Project from'./Project';
 import AddProjectForm from'./AddProjectForm';
+import EditProjectForm from'./EditProjectForm';
 // import logo from './logo.svg';
 import './App.css';
 
@@ -28,10 +29,19 @@ class App extends Component
           name:'designer',
           description:'designer project',
         },
-      ]
+      ],
+      projectToUpdate:null
     }
   }
 
+  //we want to use in project.js for particular project
+  setProjectToUpdate = (id) =>
+  {
+    var foundProject = this.state.projects.find((project) => {
+      return project.id === id;
+    })
+    this.setState({projectToUpdate:foundProject});
+  }
   // for active class
   setActiveView = (view) => 
   {
@@ -50,17 +60,28 @@ class App extends Component
   {
     Axios.post(urlPrefix+'/projects',data)
     .then(res=>{
-      console.log(res);
+      //console.log(res);
       //$r.addProject({name:'p1',description:'test'}) click on app and copy this in comand prompt
+      this.getProjects()//refrase page automatically after add data
     })
   }
-  deleteProject = (id,data) => 
+  deleteProject = (id) => 
   {
-
+    Axios.delete(urlPrefix+'/projects/'+id)//rest table formate 
+    .then(res => {
+      //console.log(res);
+      //$r.deleteProject(1565833927595) test in console log
+      this.getProjects()//refrase page automatically after add data
+    })
   }
   updateProject = (id,data) =>
   {
-
+    Axios.put(urlPrefix+'/projects/'+id,data)//rest table formate 
+    .then(res => {
+      console.log(res);
+      //$r.updateProject(1566180317318,{name:"nidhi"})
+      this.getProjects()//refrase page automatically after add data
+    })
   }
   componentDidMount(){
     this.getProjects();
@@ -82,6 +103,10 @@ class App extends Component
                 var projectProps = {
                   key:project.id,
                   ...project,
+                  deleteProject:this.deleteProject,
+                  setActiveView:this.setActiveView,
+                  setProjectToUpdate:this.setProjectToUpdate,
+                  // updateProject:this.updateProject,
                 }
                 return (<Project {...projectProps}/>)
               })
@@ -96,7 +121,19 @@ class App extends Component
           </div>
           <div className="main">
           <h3>Add a project</h3>
-            <AddProjectForm addProjects={this.addProject}/>
+            <AddProjectForm addProjects={this.addProject} setActiveView={this.setActiveView}/>
+          </div>
+        </View>
+
+        <View viewName="edit-project" activeView={this.state.activeView} className="color3">
+          <div className="header">
+            
+            <i className="fas fa-times" onClick={()=> this.setActiveView('projects')}></i>
+          </div>
+          <div className="main">
+          <h3>Update a project</h3>
+            <EditProjectForm {...this.state.projectToUpdate}
+            updateProject={this.updateProject} setActiveView={this.setActiveView}/>
           </div>
         </View>
        

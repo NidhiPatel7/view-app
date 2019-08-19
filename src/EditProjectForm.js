@@ -3,7 +3,7 @@ import React,{Component} from 'react';
 
 import './App.css';
 
-class AddProjectForm extends Component
+class EditProjectForm extends Component
 {
   constructor(props)
   {
@@ -14,31 +14,33 @@ class AddProjectForm extends Component
   handelFormSubmit = (e) =>
   {
     e.preventDefault();
+    
     var formData = new FormData(this.form);//FormData() is part of dom we get all data from form
     var data = {
         name:formData.get('name-input'),
         description:formData.get('description-input'),
     }
-    //console.log(data);
-    this.props.addProjects(data);
-    this.props.setActiveView('projects');
+    var {updateProject,id,setActiveView} = this.props;
+    updateProject(id,data);
+    setActiveView('projects');
   }
   
+ 
   render()
   {
    
-   
+    var {name,description} = this.props;
     return(	<form  onSubmit={this.handelFormSubmit} 
         ref={(el) =>{this.form = el}}>
             
             {/* el is stands for element which is form, ref={function(){}} for get anything from form */}
         <div className="form-group">
           <label htmlFor="name-input">Name</label>
-          <input type="text" className="form-control" name="name-input" id="name-input" placeholder="Enter project name"/>
+          <input type="text" className="form-control" name="name-input" id="name-input" defaultValue={name}/>
         </div>
         <div className="form-group">
           <label htmlFor="name-input">Description</label>
-          <input type="text" className="form-control" name="description-input" id="description-input" placeholder="Enter project description"/>
+          <input type="text" className="form-control" name="description-input" id="description-input" defaultValue={description}/>
         </div>
 
         <div className="form-group">
@@ -55,9 +57,9 @@ class AddProjectForm extends Component
           </select>
         </div>
 
-        <button type="submit" className="btn btn-primary">Add</button>
+        <button type="submit" className="btn btn-primary">Update</button>
       </form>);
   }
 }
 
-export default AddProjectForm;
+export default EditProjectForm;
