@@ -2,12 +2,13 @@ import React,{Component} from 'react';
 import Axios from'axios';
 import View from'./View';
 import Project from'./Project';
+import AddProjectForm from'./AddProjectForm';
 // import logo from './logo.svg';
 import './App.css';
 
 //where the server is
-// var urlPrefix = 'http:/10.4.24.22:3001/api';
-var urlPrefix = 'http://localhost:4000/api/projects';
+// var urlPrefix = 'http:/10.4.24.22(ip address of pc):3001/api';
+var urlPrefix = 'http://localhost:4000/api';
 
 class App extends Component
 {
@@ -39,7 +40,7 @@ class App extends Component
 
   getProjects = () =>
   {
-      Axios.get(urlPrefix+'/projrcts')
+      Axios.get(urlPrefix+'/projects')
       .then(res=>{
         //console.log(res);
         this.setState({projects:res.data});
@@ -47,7 +48,11 @@ class App extends Component
   }
   addProject = (data) =>
   {
-
+    Axios.post(urlPrefix+'/projects',data)
+    .then(res=>{
+      console.log(res);
+      //$r.addProject({name:'p1',description:'test'}) click on app and copy this in comand prompt
+    })
   }
   deleteProject = (id,data) => 
   {
@@ -66,7 +71,10 @@ class App extends Component
       <div className="app">
         <View viewName="projects" activeView={this.state.activeView} className="color1">
 
-            <div className="header"><i onClick={()=> this.setActiveView('nav')} className="fas fa-bars"></i></div>
+            <div className="header">
+              <i className="fas fa-plus" onClick={()=> this.setActiveView('add-project')}></i>
+              <i onClick={()=> this.setActiveView('nav')} className="fas fa-bars"></i>
+            </div>
             <div className="main">
             <h3>Projects</h3>
             {
@@ -82,35 +90,13 @@ class App extends Component
             </div>
         </View>
         <View viewName="add-project" activeView={this.state.activeView} className="color2">
-          <div className="header"><i className="fas fa-times" onClick={()=> this.setActiveView('projects')}></i></div>
+          <div className="header">
+            
+            <i className="fas fa-times" onClick={()=> this.setActiveView('projects')}></i>
+          </div>
           <div className="main">
           <h3>Add a project</h3>
-				<form>
-				  <div className="form-group">
-				    <label htmlFor="name-input">Name</label>
-				    <input type="text" className="form-control" name="name-input" id="name-input" placeholder="Enter project name"/>
-				  </div>
-				  <div className="form-group">
-				    <label htmlFor="name-input">Description</label>
-				    <input type="text" className="form-control" name="description-input" id="description-input" placeholder="Enter project description"/>
-				  </div>
-
-				  <div className="form-group">
-				    <label htmlFor="name-input">Photo</label>
-				    <input type="text" className="form-control" name="photo-input" id="photo-input" value="project.jpg"/>
-				  </div>
-
-				  <div className="form-group">
-				    <label htmlFor="type-input">Type</label>
-				    <select className="form-control" name="type-input" id="type-input">
-				      <option value="1">Painting</option>
-				      <option value="2">Sculpture</option>
-				      <option value="3">Digital</option>
-				    </select>
-				  </div>
-
-				  <button type="submit" className="btn btn-primary">Add</button>
-				</form>
+            <AddProjectForm addProjects={this.addProject}/>
           </div>
         </View>
        
