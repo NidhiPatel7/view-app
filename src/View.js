@@ -17,10 +17,10 @@ class View extends Component
     var {className , children, viewName, activeView} = this.props;//this is destructor we got children and class name
 
     //for if active true we add  active class and see active div otherwise not addactive view only otherclass
-    var newClassName = (viewName === activeView) ? 'view  active ' + className : 'view ' + className;
+    var newClassName =  'view ' + className;
     // var className = (viewName === activeView) ? 'view  active ' + className : 'view  ' + className; in real life use same bucket
 
-    return(	<div className={newClassName}>
+    return(viewName === activeView) ?(	<div className={newClassName}>
     {/* <div className="header"><i className="fas fa-bars"></i></div>
     <div className="main">
         Home
@@ -29,7 +29,7 @@ class View extends Component
     {/* {this.props.children} */
         children
     }
-</div>);
+</div>) : null
   }
 }
 
