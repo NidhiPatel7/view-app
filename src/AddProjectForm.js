@@ -18,6 +18,7 @@ class AddProjectForm extends Component
     var data = {
         name:formData.get('name-input'),
         description:formData.get('description-input'),
+        type_id:parseInt(formData.get('type-input')),
     }
     //console.log(data);
     this.props.addProjects(data);

@@ -30,7 +30,9 @@ class App extends Component
           description:'designer project',
         },
       ],
-      projectToUpdate:null
+      types:[],
+      curentType:null,
+      projectToUpdate:null,
     }
   }
 
@@ -41,6 +43,15 @@ class App extends Component
       return project.id === id;
     })
     this.setState({projectToUpdate:foundProject});
+  }
+
+  setCurrentType = (id) =>
+  {
+    var foundType = this.state.types.find((type) => {
+      return type.id === id;
+    })
+    
+    foundType ? this.setState({curentType:foundType}) : this.setState({curentType:null});
   }
   // for active class
   setActiveView = (view) => 
@@ -54,6 +65,14 @@ class App extends Component
       .then(res=>{
         //console.log(res);
         this.setState({projects:res.data});
+      })
+  }
+  getTypes = () =>
+  {
+      Axios.get(urlPrefix+'/types')
+      .then(res=>{
+        //console.log(res);
+        this.setState({types:res.data});
       })
   }
   addProject = (data) =>
@@ -85,9 +104,26 @@ class App extends Component
   }
   componentDidMount(){
     this.getProjects();
+    this.getTypes();
+  }
+
+  handleProjectTypeClick = (e) =>
+  {
+  
+    var link = e.target;
+
+    this.setCurrentType(parseInt(link.dataset.type));//dataset give which type is
+    this.setActiveView('projects')
   }
   render()
   {
+    var {curentType,projects} = this.state;
+    if(curentType)
+    {
+      projects = projects.filter(project => {
+        return project.type_id === curentType.id;
+      })
+    }
     return(
       <div className="app">
         <View viewName="projects" activeView={this.state.activeView} className="color1">
@@ -97,9 +133,9 @@ class App extends Component
               <i onClick={()=> this.setActiveView('nav')} className="fas fa-bars"></i>
             </div>
             <div className="main">
-            <h3>Projects</h3>
+            <h3>{curentType ? curentType.name :null}</h3>
             {
-              this.state.projects.map((project) => {
+              projects.map((project) => {
                 var projectProps = {
                   key:project.id,
                   ...project,
@@ -142,8 +178,15 @@ class App extends Component
           <div className="main">
             <ul className="menu">
               <li>
-                <a onClick={()=> this.setActiveView('projects')} className="color1" href="#">projects</a>
+                <a data-type="null" onClick={this.handleProjectTypeClick} className="color1" href="#">All projects</a>
               </li>
+              {
+                this.state.types.map(type => {
+                  return (<li>
+                  <a data-type={type.id} onClick={this.handleProjectTypeClick} className="color1" href="#" >{type.name}</a>
+                </li>)
+                })
+              }
               <li>
                 <a onClick={()=> this.setActiveView('add-project')} className="color2" href="#">Add a project</a>
               </li>
