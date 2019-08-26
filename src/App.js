@@ -7,6 +7,7 @@ import EditProjectForm from'./EditProjectForm';
 // import logo from './logo.svg';
 import './App.css';
 
+
 //where the server is
 // var urlPrefix = 'http:/10.4.24.22(ip address of pc):3001/api';
 var urlPrefix = 'http://localhost:4000/api';
@@ -102,6 +103,13 @@ class App extends Component
       this.getProjects()//refrase page automatically after add data
     })
   }
+  uploadFile = (formData) =>
+  {
+    // you get back a promise - we saw later
+    // axios settings form data https://stackoverflow.com/questions/47630163/axios-post-request-to-send-form-data
+    var settings =  { headers: {'Content-Type': 'multipart/form-data' }};
+    return Axios.post(urlPrefix+'/upload',formData,settings)
+  }
   componentDidMount(){
     this.getProjects();
     this.getTypes();
@@ -157,7 +165,7 @@ class App extends Component
           </div>
           <div className="main">
           <h3>Add a project</h3>
-            <AddProjectForm addProjects={this.addProject} setActiveView={this.setActiveView}/>
+            <AddProjectForm uploadFile={this.uploadFile} addProjects={this.addProject} setActiveView={this.setActiveView}/>
           </div>
         </View>
 

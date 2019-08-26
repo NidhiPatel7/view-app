@@ -14,7 +14,7 @@ class View extends Component
   {
     // var className = this.props.className;//color class coming here
     // var children = this.props.children;
-    var {className , children, viewName, activeView} = this.props;//this is destructor we got children and class name
+    var {className , children, viewName, activeView} = this.props;//this is destructor we got children(whole stuff of div we got in children) and class name
 
     //for if active true we add  active class and see active div otherwise not addactive view only otherclass
     var newClassName =  'view ' + className;

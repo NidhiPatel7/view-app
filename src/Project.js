@@ -3,6 +3,8 @@ import React,{Component} from 'react';
 
 import './App.css';
 
+var serverUrl = 'http://localhost:4000/';
+
 class Project extends Component
 {
   constructor(props)
@@ -17,16 +19,17 @@ class Project extends Component
   }
   handleUpdateProjectClick = () =>
   {
-      var {setActiveView,setProjectToUpdate,id} = this.props;
+      var {setActiveView,setProjectToUpdate,id,} = this.props;
       setProjectToUpdate(id);
       setActiveView('edit-project');
   }
   render()
   {
    
-    var {name,description} = this.props;
+    var {name,description,photo} = this.props;
     return(<div className="card project">
-                <img className="card-img-top" src="project.jpg" alt="Card image cap" />
+                <img className="card-img-top" src={serverUrl+ photo} alt="Card image cap" />
+                {/* we got img here from api projects public folder  src={serverUrl+'painting.jpg'}*/}
                 <div className="card-body">
                 <h5 className="card-title">{/*this.props.name*/name}</h5>
                 <p className="card-text">{/*this.props.description*/description}</p>
